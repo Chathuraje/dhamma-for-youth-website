@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 360" width="800" height="360" role="img">
+  <rect width="800" height="360" fill="none"/>
+  <rect x="1" y="1" width="798" height="358" rx="14" fill="none" stroke="#6d7492" stroke-width="2" stroke-dasharray="8 8"/>
+  <text x="400" y="168" text-anchor="middle" font-family="serif" font-size="34" fill="#f2a94b">නියැදි රූපය</text>
+  <text x="400" y="212" text-anchor="middle" font-family="monospace" font-size="17" fill="#6d7492">public/images/si/lab/figure-sample.svg</text>
+</svg>

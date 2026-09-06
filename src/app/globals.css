@@ -1,0 +1,395 @@
+@import "tailwindcss";
+
+/* ==========================================================================
+   ABHIDHAMMA ATLAS — DESIGN TOKENS
+   Single source of truth for colour, type, motion and elevation.
+   Docs: /docs/DESIGN-SYSTEM.md
+
+   LIGHT IS THE AUTHORED DEFAULT. The course reads as research software — a
+   cool-white ground, graphite text, one decisive blue — and dark flips the
+   tokens only. Brand ramps are declared once for light and re-declared for
+   dark so accents keep the same *meaning* at the contrast each ground needs.
+   ========================================================================== */
+
+@theme {
+  /* -- Brand ramps --------------------------------------------------------
+
+     Named for the pigment, not the job, so a token can never lie about what
+     it looks like. The job is in the comment - and in DESIGN-SYSTEM.md.
+
+     None of these names collide with Tailwind's stock palette. That matters:
+     if the primary were called `blue-500`, a typo like `bg-blue-50` would
+     silently resolve to Tailwind's own blue and pass review. */
+
+  /* cobalt - primary. Buttons, active navigation, links, selected states,
+     progress, and emphasis inside a diagram. Nothing else. The interface is
+     graphite and slate; blue is what you are meant to act on. */
+  --color-cobalt-100: #eef4ff;
+  --color-cobalt-200: #d8e4ff;
+  --color-cobalt-300: #adc3f8;
+  --color-cobalt-400: #6e90f0;
+  --color-cobalt-500: #3563e9;
+  --color-cobalt-600: #2a50c4;
+  --color-cobalt-700: #22409c;
+  --color-cobalt-800: #172a55;
+  --color-cobalt-900: #0b1220;
+
+  /* jade - insight and correctness. Also the Cetasika register in diagrams. */
+  --color-jade-300: #7fd8cb;
+  --color-jade-400: #2fb6a2;
+  --color-jade-500: #0f9d8a;
+  --color-jade-600: #0b7a6b;
+
+  /* lotus - practice and interaction. Also the Rupa register in diagrams. */
+  --color-lotus-300: #c7baf5;
+  --color-lotus-400: #9b84ee;
+  --color-lotus-500: #7c5ce7;
+  --color-lotus-600: #6244c4;
+
+  /* gold - tradition. Quotation, canon, commentary, sources. */
+  --color-gold-300: #fce0a8;
+  --color-gold-400: #f5b93f;
+  --color-gold-500: #d18b0c;
+  --color-gold-600: #a16a08;
+
+  /* rose - caution. A wrong answer, a common misreading. */
+  --color-rose-400: #e3766c;
+  --color-rose-500: #dc4c4c;
+
+  /* -- Accent ink ---------------------------------------------------------
+     An accent used as *text on a surface* needs a different lightness in each
+     theme: dark enough on cool white, light enough on midnight. A ramp step
+     cannot be both, so these five carry the reading weight while the ramps
+     stay fixed for fills and rings.
+
+     Rule of thumb: `text-<accent>-ink` on a page surface, a ramp step only
+     when the element sets its own background. */
+  --color-cobalt-ink: #2a50c4;
+  --color-jade-ink: #0b7a6b;
+  --color-lotus-ink: #6244c4;
+  --color-gold-ink: #a16a08;
+  --color-rose-ink: #c03a3a;
+
+  /* -- Semantic - light is the authored theme -----------------------------
+     Four levels of text, and almost everything uses the middle two. Blue is
+     never a text colour outside a link. */
+  --color-ground: #eef2f8;
+  --color-canvas: #f7f9fc;
+  --color-surface: #ffffff;
+  --color-surface-2: #eef4ff;
+  --color-surface-3: #dce3ed;
+
+  --color-ink: #111827;
+  --color-ink-dim: #374151;
+  --color-ink-faint: #64748b;
+  --color-ink-mute: #94a3b8;
+
+  --color-line: #dce3ed;
+  --color-line-soft: #e8edf5;
+
+  /** Label colour on a filled brand surface (a primary button, a badge). */
+  --color-on-brand: #ffffff;
+
+  /* -- The rail -----------------------------------------------------------
+     Midnight in BOTH themes - it is the one constant the learner navigates
+     by, and flipping it would make the app feel like two different products.
+     Its own ink tokens keep contrast honest against it. */
+  --color-rail: #0b1220;
+  --color-rail-2: #141e33;
+  --color-rail-ink: #f1f5fb;
+  --color-rail-ink-dim: #a9b6cc;
+  --color-rail-ink-faint: #7a899f;
+  --color-rail-line: #1e2a42;
+
+  /* -- Type ---------------------------------------------------------------
+     Latin face first, Sinhala face second. Browsers resolve per glyph, so
+     each script gets the face made for it with no markup. Pali is its own
+     stack because it needs Latin Extended Additional coverage. */
+  --font-sans: var(--font-inter), var(--font-sinhala), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-fraunces), var(--font-sinhala-serif), ui-serif, Georgia, serif;
+  --font-sinhala-sans: var(--font-sinhala), ui-sans-serif, sans-serif;
+  --font-pali: var(--font-noto-serif), ui-serif, Georgia, serif;
+
+  /* -- Motion ------------------------------------------------------------ */
+  --ease-out-soft: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out-soft: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-fast: 180ms;
+  --dur-base: 320ms;
+  --dur-slow: 620ms;
+
+  /* -- Elevation ----------------------------------------------------------
+     Light ground needs soft, wide, low-opacity shadows; the heavy drops that
+     read as depth on black read as dirt on cool white. */
+  --shadow-glow-cobalt: 0 0 0 1px rgb(53 99 233 / 0.18), 0 10px 28px -12px rgb(53 99 233 / 0.45);
+  --shadow-glow-jade: 0 0 0 1px rgb(15 157 138 / 0.18), 0 10px 28px -12px rgb(15 157 138 / 0.40);
+  --shadow-lift: 0 18px 44px -22px rgb(17 24 39 / 0.22);
+  --shadow-card: 0 1px 2px rgb(17 24 39 / 0.04), 0 8px 24px -16px rgb(17 24 39 / 0.14);
+
+  /* -- Keyframes --------------------------------------------------------- */
+  --animate-breathe: breathe 7s var(--ease-in-out-soft) infinite;
+  --animate-drift: drift 22s linear infinite;
+  --animate-shimmer: shimmer 2.6s linear infinite;
+  --animate-halo: halo 5s var(--ease-in-out-soft) infinite;
+}
+
+@keyframes breathe {
+  0%, 100% { transform: scale(1); opacity: 0.55; }
+  50%      { transform: scale(1.08); opacity: 0.9; }
+}
+@keyframes drift {
+  from { transform: translate3d(0, 0, 0); }
+  to   { transform: translate3d(-50%, 0, 0); }
+}
+@keyframes shimmer {
+  from { background-position: -200% 0; }
+  to   { background-position: 200% 0; }
+}
+@keyframes halo {
+  0%, 100% { opacity: 0.35; transform: scale(0.98); }
+  50%      { opacity: 0.7;  transform: scale(1.02); }
+}
+
+/* ==========================================================================
+   THEME OVERRIDE — dark
+   Semantic tokens flip, and each brand ramp is re-declared: the same hue at
+   the lightness a dark ground needs. Every token defined above has a value
+   here, so nothing falls back to a light-ground colour.
+   ========================================================================== */
+
+:root[data-theme="dark"] {
+  --color-ground: #070b14;
+  --color-canvas: #0b1220;
+  --color-surface: #111a2b;
+  --color-surface-2: #182338;
+  --color-surface-3: #223047;
+
+  --color-ink: #f1f5fb;
+  --color-ink-dim: #c0cbdc;
+  --color-ink-faint: #8494ac;
+  --color-ink-mute: #64748b;
+
+  --color-line: #22304a;
+  --color-line-soft: #172136;
+
+  --color-on-brand: #0b1220;
+
+  --color-rail: #070d18;
+  --color-rail-2: #101a2b;
+  --color-rail-ink: #f1f5fb;
+  --color-rail-ink-dim: #a9b6cc;
+  --color-rail-ink-faint: #7a899f;
+  --color-rail-line: #1c2740;
+
+  --color-cobalt-100: #16244a;
+  --color-cobalt-200: #1d3163;
+  --color-cobalt-300: #c3d4ff;
+  --color-cobalt-400: #8ca9f7;
+  --color-cobalt-500: #6187f2;
+  --color-cobalt-600: #4a6fe0;
+  --color-cobalt-700: #3a57b8;
+  --color-cobalt-800: #1a2c56;
+  --color-cobalt-900: #0b1220;
+
+  --color-jade-300: #a6efe2;
+  --color-jade-400: #52d3be;
+  --color-jade-500: #2fbba5;
+  --color-jade-600: #1d9384;
+
+  --color-lotus-300: #d9cdfb;
+  --color-lotus-400: #b49ef5;
+  --color-lotus-500: #9880ee;
+  --color-lotus-600: #7c63d6;
+
+  --color-gold-300: #fce3ae;
+  --color-gold-400: #f4c46b;
+  --color-gold-500: #e0a63a;
+  --color-gold-600: #b9832a;
+
+  --color-rose-400: #f09a92;
+  --color-rose-500: #e4756d;
+
+  --color-cobalt-ink: #9db8fa;
+  --color-jade-ink: #66dcc8;
+  --color-lotus-ink: #c0aef8;
+  --color-gold-ink: #f0ce86;
+  --color-rose-ink: #f2a79f;
+
+  --shadow-card: 0 1px 2px rgb(0 0 0 / 0.35), 0 12px 32px -20px rgb(0 0 0 / 0.7);
+  --shadow-lift: 0 20px 56px -24px rgb(0 0 0 / 0.75);
+}
+
+/* ==========================================================================
+   BASE
+   ========================================================================== */
+
+html {
+  background-color: var(--color-ground);
+  color-scheme: light;
+  scroll-behavior: smooth;
+}
+html[data-theme="dark"] { color-scheme: dark; }
+
+body {
+  background-color: var(--color-canvas);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+
+::selection {
+  background: var(--color-cobalt-500);
+  color: var(--color-on-brand);
+}
+
+/* Focus ring — always visible for keyboard users, never for mouse. */
+:focus-visible {
+  outline: 2px solid var(--color-cobalt-500);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/**
+ * Opt out where a control draws its own focus.
+ *
+ * A field that fills its own row - the search dialog's input - got an offset
+ * rectangle floating over the row's borders and clipped by the dialog's
+ * rounded corners. Marking it `data-no-ring` moves the affordance to the row,
+ * which is what a reader actually perceives as "the field".
+ *
+ * This rule has to live here rather than as an `outline-none` utility on the
+ * element: Tailwind utilities sit in a cascade layer, and unlayered rules like
+ * the one above beat every layer regardless of specificity.
+ */
+:focus-visible:where([data-no-ring]) {
+  outline: none;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: var(--color-ground); }
+::-webkit-scrollbar-thumb {
+  background: var(--color-surface-3);
+  border-radius: 99px;
+  border: 2px solid var(--color-ground);
+}
+::-webkit-scrollbar-thumb:hover { background: var(--color-ink-faint); }
+
+/* ==========================================================================
+   UTILITIES
+   ========================================================================== */
+
+@utility glass {
+  background: color-mix(in oklab, var(--color-surface) 78%, transparent);
+  -webkit-backdrop-filter: blur(16px) saturate(1.3);
+  backdrop-filter: blur(16px) saturate(1.3);
+  border: 1px solid var(--color-line);
+}
+
+@utility text-gradient-cobalt {
+  background: linear-gradient(105deg, var(--color-cobalt-700), var(--color-cobalt-500) 52%, var(--color-lotus-500));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+@utility grain {
+  position: relative;
+}
+
+/* A whisper of tooth — keeps large flat fields from banding. */
+.grain::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.016;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+:root[data-theme="dark"] .grain::after {
+  opacity: 0.04;
+  mix-blend-mode: overlay;
+}
+
+/**
+ * The rail's own surface. Midnight in both themes, with a soft vertical
+ * lift so a long sidebar does not read as one flat slab.
+ */
+@utility rail-surface {
+  background:
+    linear-gradient(180deg,
+      color-mix(in oklab, var(--color-rail-2) 65%, transparent),
+      transparent 42%),
+    var(--color-rail);
+}
+
+/* ==========================================================================
+   PROSE — lesson body copy
+   ========================================================================== */
+
+.prose-dhamma {
+  color: var(--color-ink-dim);
+  font-size: 1.075rem;
+  /* Sinhala stacks vowel signs above and below the baseline; at Latin
+     leading (~1.7) consecutive lines collide. 2.0 is the comfortable floor. */
+  line-height: 2;
+  letter-spacing: 0;
+  word-break: break-word;
+}
+.prose-dhamma > * + * { margin-top: 1.15em; }
+.prose-dhamma strong { color: var(--color-ink); font-weight: 600; }
+/* Emphasis is weight and slant, not colour. Blue in this interface means
+   "you can act on this", and a stressed word is not a link. */
+.prose-dhamma em { font-style: italic; color: var(--color-ink); }
+.prose-dhamma a {
+  color: var(--color-cobalt-500);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+}
+.prose-dhamma a:hover { color: var(--color-cobalt-600); }
+
+:root[data-theme="dark"] .prose-dhamma a { color: var(--color-cobalt-400); }
+:root[data-theme="dark"] .prose-dhamma a:hover { color: var(--color-cobalt-300); }
+
+/* ==========================================================================
+   ACCESSIBILITY — honour the OS reduced-motion setting everywhere.
+   Motion in this project is decorative; content must never depend on it.
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ==========================================================================
+   SINHALA TYPOGRAPHY
+   Sinhala glyphs carry marks above and below the baseline, so headings set at
+   Latin leading clip. These utilities give the script the room it needs.
+   ========================================================================== */
+
+.si-heading {
+  line-height: 1.5;
+  letter-spacing: 0;
+}
+
+.si-tight {
+  line-height: 1.35;
+}
+
+/* Sinhala has no letter case, so uppercase tracking tricks do nothing for it.
+   Eyebrow labels keep their tracking for Latin and drop it for Sinhala. */
+.eyebrow-si {
+  text-transform: none;
+  letter-spacing: 0.04em;
+}
