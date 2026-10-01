@@ -28,6 +28,7 @@ import { SpinWheel } from "./blocks/SpinWheel";
 import { ElementMixer } from "./blocks/ElementMixer";
 import { Hierarchy } from "./blocks/Hierarchy";
 import { Octad } from "./blocks/Octad";
+import { Plates } from "./blocks/Plates";
 import { ParamatthaTable } from "./blocks/ParamatthaTable";
 import { Shelf } from "./blocks/Shelf";
 import { Slicer } from "./blocks/Slicer";
@@ -113,6 +114,9 @@ export function BlockRenderer({
       return <Hierarchy block={block} />;
     case "deconstruct":
       return <Deconstruct block={block} />;
+    case "plates":
+      return <Plates block={block} />;
+
     case "paramatthaTable":
       return <ParamatthaTable block={block} />;
     case "ladder":

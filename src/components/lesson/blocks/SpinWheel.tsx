@@ -5,22 +5,38 @@ import { useEffect, useRef, useState } from "react";
 import { rich } from "@/lib/richtext";
 import { t } from "@/lib/strings";
 import type { SpinWheelBlock } from "@/lib/types";
-import { cn } from "@/lib/utils";
+import { cn, formatNumber } from "@/lib/utils";
 
-/** Above this the points stop resolving and read as one ring. */
+/** Above this the smear has closed and the eye reads one continuous ring. */
 const BLUR_THRESHOLD = 55;
-const POINTS = 26;
+
+/** How many momentary points `mode: "points"` draws. Fixed, at every speed. */
+const POINTS = 12;
+
+/** Geometry of the SVG viewBox, in its own units. */
+const R = 40;
+const CIRCUMFERENCE = 2 * Math.PI * R;
 
 /**
  * The firebrand circle (alāta-cakka).
  *
- * At low speed the learner sees separate points arising and passing. At high
- * speed the identical points read as one unbroken ring. Nothing about the
- * points changed — only the speed. That is santati-ghana, and a slider the
- * learner moves themselves argues it far better than a paragraph can.
+ * There is exactly ONE firebrand, at every speed. What changes with the slider
+ * is how long its afterimage is — at rest a spark, at speed a smear, and past
+ * the threshold a closed ring that was never there.
  *
- * Under `prefers-reduced-motion` the wheel does not spin; the two states are
- * shown as static illustrations instead, so the teaching still lands.
+ * An earlier version added more dots as the speed rose, which taught the
+ * opposite of the simile: a learner watching objects multiply concludes that
+ * speed creates things, when the whole point is that speed creates the
+ * *appearance* of a thing out of one that keeps moving. The count is now drawn
+ * on screen and stays at one, so the eye can check itself.
+ *
+ * The trail is a tapering stroked arc rather than a row of dots for the same
+ * reason: discrete dots read as separate brands, a smear reads as one brand
+ * seen badly. Three nested arcs give the taper without ever looking countable.
+ *
+ * Under `prefers-reduced-motion` nothing spins; the brand sits still with the
+ * invented ring drawn faintly behind it, and the two descriptions still switch
+ * with the slider, so the teaching lands without motion.
  */
 export function SpinWheel({ block }: { block: SpinWheelBlock }) {
   const reduce = useReducedMotion();
@@ -53,8 +69,30 @@ export function SpinWheel({ block }: { block: SpinWheelBlock }) {
     };
   }, [speed, reduce]);
 
-  /** Longer trails at speed — each point smears into the next. */
-  const trail = Math.min(Math.round((speed / 100) * POINTS), POINTS - 1);
+  /**
+   * How much of the circle the afterimage covers. Closes to a full 360° right
+   * at the threshold, so "it looks like a ring" and "the copy says ring" are
+   * the same moment rather than two nearby ones.
+   */
+  const count = block.mode === "points" ? POINTS : 1;
+
+  /**
+   * Each emitter only ever has to smear as far as the next one to close the
+   * ring, so both modes reach "unbroken" at the same point on the slider.
+   */
+  const maxSweep = 360 / count;
+  const sweep = reduce
+    ? maxSweep
+    : Math.min(maxSweep, (speed / BLUR_THRESHOLD) * maxSweep);
+
+  /** Longest and faintest first, so the head sits on top of its own smear. */
+  const tail = [
+    { span: 1, opacity: 0.18, width: 5.5, blur: 2.6 },
+    { span: 0.62, opacity: 0.3, width: 6, blur: 1.8 },
+    { span: 0.28, opacity: 0.5, width: 6.5, blur: 1.1 },
+  ];
+
+  const headAngle = reduce ? 0 : sweep;
 
   return (
     <figure className="my-10 overflow-hidden rounded-2xl bg-surface ring-1 ring-line">
@@ -66,45 +104,77 @@ export function SpinWheel({ block }: { block: SpinWheelBlock }) {
 
       <div className="px-5 py-8">
         <div className="relative mx-auto aspect-square w-full max-w-[18rem]">
-          <div
-            className="absolute inset-0"
-            style={reduce ? undefined : { transform: `rotate(${angle}deg)` }}
-          >
-            {Array.from({ length: POINTS }, (_, i) => {
-              // Only the leading point is "now"; the rest are its afterimage.
-              const withinTrail = i <= trail;
-              if (!withinTrail && !reduce) return null;
-              const a = (i / POINTS) * Math.PI * 2 - Math.PI / 2;
-              const fade = 1 - i / Math.max(trail, 1);
-              return (
-                <span
-                  key={i}
-                  className={cn(
-                    "absolute h-3.5 w-3.5 rounded-full",
-                    i === 0 ? "bg-cobalt-300" : "bg-cobalt-500",
-                  )}
-                  style={{
-                    left: `${50 + Math.cos(a) * 40}%`,
-                    top: `${50 + Math.sin(a) * 40}%`,
-                    transform: "translate(-50%, -50%)",
-                    opacity: reduce ? 1 : 0.25 + fade * 0.75,
-                    filter: fast ? "blur(2.5px)" : undefined,
-                    boxShadow:
-                      i === 0
-                        ? "0 0 18px 4px rgb(242 169 75 / 0.6)"
-                        : undefined,
-                  }}
-                />
-              );
-            })}
-          </div>
-
           {/* the ring only the eye invents */}
           <div
             aria-hidden
-            className="pointer-events-none absolute inset-[10%] rounded-full border-2 border-cobalt-500 transition-opacity duration-500"
-            style={{ opacity: fast && !reduce ? 0.55 : 0 }}
+            className="pointer-events-none absolute inset-[10%] rounded-full border-2 border-gold-500 transition-opacity duration-500"
+            style={{ opacity: fast ? 0.4 : 0 }}
           />
+
+          <svg
+            viewBox="0 0 100 100"
+            className="absolute inset-0 h-full w-full"
+            aria-hidden
+          >
+            <defs>
+              <radialGradient id="spin-ember">
+                <stop offset="0%" stopColor="rgb(255 244 214)" />
+                <stop offset="45%" stopColor="rgb(245 185 63)" />
+                <stop offset="100%" stopColor="rgb(217 91 32 / 0)" />
+              </radialGradient>
+            </defs>
+
+            {/*
+              Rotated so the arc *ends* where the brand is: the smear is what
+              the brand has already passed through, never where it is going.
+            */}
+            {Array.from({ length: count }, (_, i) => (
+            <g
+              key={i}
+              transform={`rotate(${angle - sweep + i * (360 / count)} 50 50)`}
+            >
+              {tail.map((layer) => {
+                const arc = (CIRCUMFERENCE * sweep * layer.span) / 360;
+                return (
+                  <circle
+                    key={layer.span}
+                    cx={50}
+                    cy={50}
+                    r={R}
+                    fill="none"
+                    stroke="rgb(245 185 63)"
+                    strokeWidth={layer.width}
+                    strokeLinecap="round"
+                    strokeDasharray={`${arc} ${CIRCUMFERENCE}`}
+                    strokeDashoffset={-(CIRCUMFERENCE * (sweep - sweep * layer.span)) / 360}
+                    opacity={layer.opacity}
+                    style={{ filter: `blur(${layer.blur}px)` }}
+                    transform="rotate(-90 50 50)"
+                  />
+                );
+              })}
+
+              {/* THE firebrand — one, always one */}
+              <g
+                transform={`rotate(${headAngle} 50 50)`}
+                style={{ transformOrigin: "50px 50px" }}
+              >
+                <circle cx={50} cy={50 - R} r={9} fill="url(#spin-ember)" opacity={0.75} />
+                <circle cx={50} cy={50 - R} r={3.4} fill="rgb(255 250 235)" />
+              </g>
+            </g>
+            ))}
+          </svg>
+
+          {/* the count, so the eye can check itself */}
+          <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center">
+            <span className="si-heading text-[0.7rem] text-ink-faint">
+              {block.mode === "points" ? t.spin.pointCount : t.spin.brandCount}
+            </span>
+            <span className="font-display text-3xl font-semibold tabular-nums text-ink">
+              {formatNumber(count)}
+            </span>
+          </div>
         </div>
 
         {/* speed */}
@@ -152,13 +222,13 @@ export function SpinWheel({ block }: { block: SpinWheelBlock }) {
           transition={{ duration: 0.24 }}
           className={cn(
             "border-t border-line px-5 py-5",
-            fast ? "bg-rose-500/8" : "bg-jade-500/8",
+            fast ? "bg-gold-500/8" : "bg-jade-500/8",
           )}
         >
           <h5
             className={cn(
               "si-heading text-lg font-semibold",
-              fast ? "text-rose-ink" : "text-jade-ink",
+              fast ? "text-gold-ink" : "text-jade-ink",
             )}
           >
             {fast ? block.fastLabel : block.slowLabel}

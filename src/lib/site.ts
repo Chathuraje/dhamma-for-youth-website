@@ -58,6 +58,7 @@ export type RailIcon =
   | "bookmarks"
   | "reference"
   | "glossary"
+  | "paramattha"
   | "resources"
   | "community"
   | "settings";
@@ -120,6 +121,11 @@ export const railGroups: readonly RailGroup[] = [
         href: "/reference",
         label: t.nav.reference,
         icon: "reference",
+      },
+      {
+        href: "/paramattha",
+        label: t.paramattha.heading,
+        icon: "paramattha",
       },
       {
         href: "/glossary",

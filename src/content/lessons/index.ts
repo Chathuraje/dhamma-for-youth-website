@@ -4,7 +4,6 @@ import { lesson as lesson01 } from "./01-pitaka-thuna";
 import { lesson as lesson02 } from "./02-devlova-kalaya";
 import { lesson as lesson03 } from "./03-abhidharma-gamana";
 import { lesson as lesson04 } from "./04-sammuti-paramattha";
-import { lesson as lesson05 } from "./05-paramarthaya-handunaganima";
 import { lesson as lesson06 } from "./06-suddhashtakaya";
 import { lesson as lesson07 } from "./07-pariccheda-avakasaya";
 import { lesson as lesson08 } from "./08-sitha-yanu-kumakda";
@@ -36,7 +35,6 @@ export const lessons: Lesson[] = [
   lesson02,
   lesson03,
   lesson04,
-  lesson05,
   lesson06,
   lesson07,
   lesson08,

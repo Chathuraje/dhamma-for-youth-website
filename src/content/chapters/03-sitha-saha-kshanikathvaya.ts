@@ -19,7 +19,7 @@ export const chapter: Chapter = {
   summary:
     "සිතේ අර්ථය සහ චිත්ත සන්තතිය, චිත්තක්ෂණය සහ රූප ආයුෂ 17:1 අනුපාතය, සිතේ විචිත්‍රත්වය හා බලය, සහ අලාත චක්‍රයෙන් පෙන්වන සන්තති ඝනය.",
   status: "published",
-  image: "chapters/03-sitha-saha-kshanikathvaya.svg",
+  image: "chapters/03-sitha-saha-kshanikathvaya.png",
 
   lessons: [
     "sitha-yanu-kumakda",

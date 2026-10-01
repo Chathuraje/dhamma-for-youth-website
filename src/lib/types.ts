@@ -268,6 +268,35 @@ export interface FigureBlock {
   size?: "inline" | "wide";
 }
 
+/**
+ * An ordered deck of authored plates, stepped through one at a time.
+ *
+ * Distinct from `figure`, which is one picture in the flow of the page, and
+ * from `flow`, whose steps are authored text. A plate is a whole composed
+ * illustration that already carries its own title and labels, so the block
+ * gives it a frame and a way forward and stays out of its way.
+ *
+ * Portrait plates are the reason this exists: seven 4:5 illustrations stacked
+ * as separate figures is a page nobody scrolls to the end of, and a grid of
+ * them throws away the order that is the whole point.
+ */
+export interface PlatesBlock {
+  type: "plates";
+  title?: string;
+  /** Ordered. Position is meaningful — this is a sequence, not a gallery. */
+  plates: Array<{
+    /** Path under `public/images/`, WITHOUT the locale suffix. */
+    src: string;
+    /** What the plate shows. Required, exactly as on `figure`. */
+    alt: string;
+    /** Shown under the frame. The plate's own title is in the artwork. */
+    caption?: RichText;
+  }>;
+  /** The plates' real pixel size. One pair serves the deck — they must match. */
+  width: number;
+  height: number;
+}
+
 /** Breathing room between movements of a section. */
 export interface DividerBlock {
   type: "divider";
@@ -528,6 +557,22 @@ export interface MomentRatioBlock {
 export interface SpinWheelBlock {
   type: "spinWheel";
   title?: string;
+  /**
+   * What is going round.
+   *
+   * `brand` (default) draws ONE firebrand — the alāta-cakka read literally,
+   * for teaching paññatti: the ring is invented by the eye out of a single
+   * thing that keeps moving.
+   *
+   * `points` draws a fixed ring of momentary points — the simile read as
+   * santati: many dhammas arise and cease, and their succession is what looks
+   * continuous.
+   *
+   * Neither mode ever changes its count with the speed, and both draw the
+   * count on screen. A widget that multiplied its objects as the slider rose
+   * taught that speed creates things, which is the opposite of both readings.
+   */
+  mode?: "brand" | "points";
   /** Shown while the speed is low enough to resolve individual points. */
   slowLabel: string;
   slowText: RichText;
@@ -547,7 +592,13 @@ export interface SpinWheelBlock {
 export interface ParamatthaTableBlock {
   type: "paramatthaTable";
   title?: string;
-  groups: Array<{
+  /**
+   * Omit to render the course's own 82 — `src/content/paramattha.ts`, which is
+   * also what `/paramattha` indexes. There is one definition of the 82 and a
+   * lesson should not carry a second; pass `groups` only to draw a different
+   * set, which so far nothing needs but the lab.
+   */
+  groups?: Array<{
     id: string;
     label: string;
     pali: string;
@@ -560,6 +611,8 @@ export interface ParamatthaTableBlock {
       pali?: string;
       /** Lesson slug that unlocks it. Omit to leave it always unlocked. */
       unlockedBy?: string;
+      /** Glossary id, where the paramattha has a full entry to link to. */
+      term?: string;
       note?: RichText;
     }>;
   }>;
@@ -609,6 +662,7 @@ export type Block =
   | TableBlock
   | SummaryBlock
   | FigureBlock
+  | PlatesBlock
   | StructureBlock
   | DerivationBlock
   | TimelineBlock

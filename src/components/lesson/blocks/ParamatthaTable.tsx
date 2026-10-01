@@ -3,6 +3,10 @@
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { Lock } from "lucide-react";
 import { useState } from "react";
+import Link from "next/link";
+import { ArrowUpRight } from "lucide-react";
+import { paramatthaGroups } from "@/content/paramattha";
+import { getLesson } from "@/content/lessons";
 import { rich } from "@/lib/richtext";
 import { useHydrated, useProgress } from "@/lib/progress";
 import { t } from "@/lib/strings";
@@ -12,22 +16,22 @@ import { Pali } from "@/components/ui";
 
 const ACCENT = {
   cobalt: {
-    cell: "bg-cobalt-500/15 ring-cobalt-500/35 text-cobalt-200 hover:bg-cobalt-500/25",
+    cell: "bg-cobalt-500/15 ring-cobalt-500/35 text-cobalt-ink hover:bg-cobalt-500/25",
     dot: "bg-cobalt-500",
     text: "text-cobalt-ink",
   },
   jade: {
-    cell: "bg-jade-500/15 ring-jade-500/35 text-jade-200 hover:bg-jade-500/25",
+    cell: "bg-jade-500/15 ring-jade-500/35 text-jade-ink hover:bg-jade-500/25",
     dot: "bg-jade-500",
     text: "text-jade-ink",
   },
   lotus: {
-    cell: "bg-lotus-500/15 ring-lotus-500/35 text-lotus-200 hover:bg-lotus-500/25",
+    cell: "bg-lotus-500/15 ring-lotus-500/35 text-lotus-ink hover:bg-lotus-500/25",
     dot: "bg-lotus-500",
     text: "text-lotus-ink",
   },
   rose: {
-    cell: "bg-rose-500/15 ring-rose-500/35 text-rose-200 hover:bg-rose-500/25",
+    cell: "bg-rose-500/15 ring-rose-500/35 text-rose-ink hover:bg-rose-500/25",
     dot: "bg-rose-500",
     text: "text-rose-ink",
   },
@@ -62,12 +66,15 @@ export function ParamatthaTable({ block }: { block: ParamatthaTableBlock }) {
   const isUnlocked = (unlockedBy?: string) =>
     !unlockedBy || startedLessons.has(unlockedBy);
 
-  const allCells = block.groups.flatMap((g) => g.cells);
+  /** One definition of the 82 — see `src/content/paramattha.ts`. */
+  const groups = block.groups ?? paramatthaGroups;
+
+  const allCells = groups.flatMap((g) => g.cells);
   const unlockedCount = allCells.filter((c) => isUnlocked(c.unlockedBy)).length;
-  const totalCount = block.groups.reduce((n, g) => n + g.count, 0);
+  const totalCount = groups.reduce((n, g) => n + g.count, 0);
 
   const open = allCells.find((c) => c.id === openId);
-  const openGroup = block.groups.find((g) =>
+  const openGroup = groups.find((g) =>
     g.cells.some((c) => c.id === openId),
   );
 
@@ -83,7 +90,7 @@ export function ParamatthaTable({ block }: { block: ParamatthaTableBlock }) {
       </div>
 
       <div className="space-y-6 px-5 py-6">
-        {block.groups.map((group) => {
+        {groups.map((group) => {
           const a = ACCENT[group.accent];
           const named = group.cells.length;
           const anonymous = Math.max(group.count - named, 0);
@@ -182,6 +189,26 @@ export function ParamatthaTable({ block }: { block: ParamatthaTableBlock }) {
                   {rich(open.note)}
                 </p>
               )}
+
+              {/*
+                A cell that only describes itself is a dead end. These are the
+                two questions a learner actually has of it: where is this
+                taught, and what is the full entry?
+              */}
+              <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1.5">
+                {open.unlockedBy && (
+                  <CellLink
+                    href={`/lessons/${open.unlockedBy}`}
+                    label={`${t.paramattha.taughtIn}: ${getLesson(open.unlockedBy)?.title ?? open.unlockedBy}`}
+                  />
+                )}
+                {open.term && (
+                  <CellLink
+                    href={`/glossary#${open.term}`}
+                    label={t.paramattha.fullEntry}
+                  />
+                )}
+              </div>
             </div>
           </motion.div>
         )}
@@ -191,5 +218,17 @@ export function ParamatthaTable({ block }: { block: ParamatthaTableBlock }) {
         {t.paramattha.progressNote}
       </p>
     </figure>
+  );
+}
+
+function CellLink({ href, label }: { href: string; label: string }) {
+  return (
+    <Link
+      href={href}
+      className="si-heading inline-flex items-center gap-1 text-xs font-medium text-cobalt-ink underline decoration-cobalt-ink/25 underline-offset-4 transition-colors hover:decoration-cobalt-ink"
+    >
+      {label}
+      <ArrowUpRight size={12} aria-hidden />
+    </Link>
   );
 }

@@ -292,6 +292,27 @@ for (const lesson of lessons) {
           break;
         }
 
+        case "plates": {
+          // One plate is a `figure` wearing a stepper.
+          if (!block.plates?.length || block.plates.length < 2)
+            err(bat, "a deck needs at least two plates");
+          if (!block.width || !block.height)
+            err(bat, "missing `width`/`height` - the page must reserve the space");
+
+          for (const plate of block.plates ?? []) {
+            if (!plate.alt) err(bat, `plate "${plate.src}" has no \`alt\``);
+            for (const locale of LOCALES) {
+              const file = imageFile(plate.src, locale);
+              if (!existsSync(join(root, file)))
+                (locale === AUTHORED_LOCALE ? err : warn)(
+                  bat,
+                  `image not on disk: ${file}`,
+                );
+            }
+          }
+          break;
+        }
+
         case "structure": {
           // Ids address nodes, so a duplicate silently keys two bands alike.
           const seen = new Set();
@@ -392,14 +413,21 @@ for (const lesson of lessons) {
         }
 
         case "paramatthaTable": {
-          for (const g of block.groups) {
+          // `groups` omitted means "render the course's own 82", which is
+          // validated once on its own below rather than per block.
+          for (const g of block.groups ?? []) {
             if (g.cells.length > g.count)
               err(bat, `group "${g.id}" names ${g.cells.length} cells but count is ${g.count}`);
-            for (const c of g.cells)
+            for (const c of g.cells) {
               if (c.unlockedBy && !lessons.some((l) => l.slug === c.unlockedBy))
                 err(bat, `cell "${c.id}" unlockedBy unknown lesson "${c.unlockedBy}"`);
+              if (c.term && !termIds.has(c.term))
+                err(bat, `cell "${c.id}" links unknown glossary term "${c.term}"`);
+            }
           }
-          const ids = block.groups.flatMap((g) => g.cells.map((c) => c.id));
+          const ids = (block.groups ?? []).flatMap((g) =>
+            g.cells.map((c) => c.id),
+          );
           if (new Set(ids).size !== ids.length)
             err(bat, "cell ids must be unique across all groups");
           break;
@@ -419,6 +447,40 @@ for (const lesson of lessons) {
         }
       }
     });
+  }
+}
+
+/* -- the 82 ---------------------------------------------------------------- */
+/*
+ * The course's own paramattha registry, which `/paramattha` indexes and every
+ * `paramatthaTable` block without its own `groups` renders. Checked here once
+ * rather than wherever it happens to be drawn.
+ */
+{
+  const { paramatthaGroups, paramatthaTotal } = await load(
+    "src/content/paramattha.ts",
+  );
+  const at = "paramattha registry";
+
+  if (paramatthaTotal !== 82)
+    err(at, `groups total ${paramatthaTotal} — the paramatthas are 82`);
+
+  const seenCell = new Set();
+  for (const g of paramatthaGroups) {
+    if (g.cells.length > g.count)
+      err(at, `group "${g.id}" names ${g.cells.length} cells but count is ${g.count}`);
+
+    for (const c of g.cells) {
+      if (seenCell.has(c.id)) err(at, `duplicate cell id "${c.id}"`);
+      seenCell.add(c.id);
+
+      if (c.unlockedBy && !lessons.some((l) => l.slug === c.unlockedBy))
+        err(at, `cell "${c.id}" unlockedBy unknown lesson "${c.unlockedBy}"`);
+      if (c.term && !termIds.has(c.term))
+        err(at, `cell "${c.id}" links unknown glossary term "${c.term}"`);
+
+      walk(c, `${at} / cell "${c.id}"`);
+    }
   }
 }
 

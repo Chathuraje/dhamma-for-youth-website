@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { ArrowLeft, ArrowRight, FileText } from "lucide-react";
 
 import { Breadcrumbs } from "@/components/app/Breadcrumbs";
@@ -69,6 +69,13 @@ export default async function LessonPage({
   params,
 }: PageProps<"/lessons/[slug]">) {
   const { slug } = await params;
+
+  // Lesson 2.2 was consolidated into 2.1. Keep old bookmarks and shared links
+  // useful by taking readers directly to the first formerly-2.2 section.
+  if (slug === "paramarthaya-handunaganima") {
+    redirect("/lessons/sammuti-paramattha#section-niti-dekak");
+  }
+
   const lesson = getLesson(slug);
   if (!lesson) notFound();
 

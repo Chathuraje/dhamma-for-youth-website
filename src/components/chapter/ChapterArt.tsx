@@ -37,8 +37,11 @@ export function ChapterArt({
       <img
         src={src}
         alt=""
-        width={400}
-        height={300}
+        // The convention is 1600 x 900 — see public/images/README.md. Every use
+        // sizes the box with CSS, so these only fix the ratio reserved before
+        // the file lands; a 4:3 guess here made the hero panel jump to 16:9.
+        width={1600}
+        height={900}
         loading={eager ? "eager" : "lazy"}
         fetchPriority={eager ? "high" : undefined}
         decoding="async"

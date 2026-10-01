@@ -7,17 +7,17 @@ import { Reveal } from "@/components/motion/Reveal";
 const ACCENT = {
   cobalt: {
     tile: "bg-cobalt-500/10 ring-cobalt-500/30",
-    text: "text-cobalt-200",
+    text: "text-cobalt-ink",
     rule: "bg-cobalt-500/40",
   },
   jade: {
     tile: "bg-jade-500/10 ring-jade-500/30",
-    text: "text-jade-200",
+    text: "text-jade-ink",
     rule: "bg-jade-500/40",
   },
   lotus: {
     tile: "bg-lotus-500/10 ring-lotus-500/30",
-    text: "text-lotus-200",
+    text: "text-lotus-ink",
     rule: "bg-lotus-500/40",
   },
   neutral: {

@@ -51,11 +51,43 @@ export function rich(text: RichText, opts: RichOptions = {}): ReactNode {
 
     const [raw] = match;
 
+    /**
+     * A chip is an inline-block, so the line may break either side of it —
+     * which strands the `(` of `නම ([[pali:pannatti]])` alone at the end of a
+     * line. Pull any bracket or quote that touches the chip inside a nowrap
+     * wrapper with it, so the punctuation travels with the word it belongs to.
+     */
+    const glue = (chip: ReactNode) => {
+      let opener = "";
+      const prev = nodes[nodes.length - 1];
+      if (typeof prev === "string") {
+        const found = prev.match(/[([{«“‘"']+$/);
+        if (found) {
+          opener = found[0];
+          nodes[nodes.length - 1] = prev.slice(0, -opener.length);
+        }
+      }
+      const closer = text.slice(cursor).match(/^[)\]}»”’"',.;:]+/)?.[0] ?? "";
+      cursor += closer.length;
+
+      nodes.push(
+        opener || closer ? (
+          <span key={key++} className="whitespace-nowrap">
+            {opener}
+            {chip}
+            {closer}
+          </span>
+        ) : (
+          chip
+        ),
+      );
+    };
+
     if (raw.startsWith("**")) {
       nodes.push(<strong key={key++}>{rich(raw.slice(2, -2), opts)}</strong>);
     } else if (raw.startsWith("[[pali:")) {
       const id = raw.slice(7, -2);
-      nodes.push(
+      glue(
         chips ? (
           <PaliChip key={key++} id={id} />
         ) : (
@@ -66,7 +98,7 @@ export function rich(text: RichText, opts: RichOptions = {}): ReactNode {
       );
     } else if (raw.startsWith("[[ref:")) {
       const slug = raw.slice(6, -2);
-      nodes.push(
+      glue(
         chips ? (
           <RefChip key={key++} slug={slug} />
         ) : (

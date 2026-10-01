@@ -20,7 +20,7 @@ export const chapter: Chapter = {
   summary:
     "ධනුග්ගහ සූත්‍රයේ වේග අනුපිළිවෙල, තල 31 සහ ලෝක ධාතු තුන, සහ රෝහිතස්ස සූත්‍රයෙන් ලෝකයේ කෙළවර පනවන ස්ථානය.",
   status: "published",
-  image: "chapters/04-vishvaye-yatharthaya.svg",
+  image: "chapters/04-vishvaye-yatharthaya.png",
 
   lessons: ["vegaya-saha-vishvaya", "lokaye-kelavara"],
 

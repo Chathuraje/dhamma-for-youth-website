@@ -11,7 +11,113 @@ bump means fixes and content corrections.
 
 ## [Unreleased]
 
+### Changed
+
+- **පරිච්ඡේදය 02 rebuilt from the author's revised note — all four lessons.**
+  Checked against අභිධර්මාර්ථ ප්‍රදීපිකාව, චන්දවිමල හිමි and the commentaries,
+  which now appear in every lesson's sources. `sortGame` ×2, `octad`, `slicer`,
+  `elementMixer`, `ladder`, `taxonomy` and the 82-table all carry over.
+  New in the teaching:
+  - **2.1** — the ගිනි පෙණෙල්ල (අලතචක්ක) simile replaces the cart quote; the two
+    truths get a පදනම row (ප්‍රඥප්තිය vs ස්වභාව ධර්මය); the 82 splits into
+    සංඛත 81 / අසංඛත 1 above the periodic table; a new closing section on how
+    mistaking සම්මුතිය for පරමාර්ථය is the root of දුක.
+  - **2.1 no longer pre-teaches the rest of the chapter.** It named the eight
+    රූප and පරිච්ඡේද රූපය in prose while its own 82-table still showed those
+    cells locked until 2.3 and 2.4. It now stops at the conclusion it earns —
+    every physical object bottoms out in one and the same place — and the
+    diagram points forward to the lesson that opens each half.
+  - **2.1 reordered so the argument is felt before it is named.** ඕනෑම භෞතික
+    වස්තුවක් බිඳ බැලීම now follows the broken table directly instead of sitting
+    after සත්‍ය ද්විත්වය: one thing is analysed, then four unlike things are and
+    land in the same place, and *only then* are the two truths named. The
+    section that generalises no longer has the abstraction wedged in front of
+    it. Section ids are unchanged, so reading progress carries over.
+  - **2.2** — the two rules now carry their worked explanations (පඨවි cannot be
+    halved; සිත and චෛතසික arise together without merging), and the claim that
+    paramatthas are ක්‍රියා rather than ද්‍රව්‍ය is now a cited quotation.
+  - **2.3** — simultaneity is named (**ඒකප්පාද, ඒකනිරෝධ**), the eight get their
+    fuller functional descriptions, and the science table drops the two rows
+    that belonged to other chapters.
+  - **2.4** — අජටාකාශය vs පරිච්ඡේද ආකාශය is now the sharp distinction it should
+    be: one is a ප්‍රඥප්තිය, the other is one of the 28 රූප.
+  - Every lesson gains a question-and-answer recap table before its summary.
+  - **The chapter reads as one line.** 2.2 now opens by picking up the question
+    2.1 leaves ("you can name the two truths — but how do you *decide* which
+    side a new thing falls on?"), and 2.3 opens on the chapter's own first
+    move rather than miscrediting it to the lesson immediately before it.
+    Three things said twice are now said once, where they belong: 2.4's
+    cutting section restated its own opening answer almost verbatim and now
+    asks the next question instead; "cold is a state of තේජෝ" sits only in 2.4,
+    where "no element is ever zero" is the point being made.
+- **පරිච්ඡේදය 02 is now `පරමාර්ථ ධර්ම`**, not `පරමාර්ථ ධර්මයට පිවිසුම`.
+- **A chapter's artwork fills its hero** rather than sitting in a panel beside
+  it, matching what the lesson banner already did. Two-layer scrim, heavy where
+  the text is and thin where the picture is; `docs/IMAGE-PROMPTS.md` already
+  specified centre-heavy covers for exactly this crop.
+- The 82-table's group colours now follow the fixed register — සිත cobalt,
+  චෛතසික jade, රූප lotus — so the table and the new partition diagram above it
+  name the same category with the same colour.
+
+### Fixed
+
+- **The firebrand widget multiplied its firebrands.** `spinWheel` drew more and
+  more points as the speed rose, which taught the opposite of the simile: a
+  learner watching objects appear concludes that speed *creates* things. It now
+  keeps a constant count at every speed and only lengthens the smear, and it
+  prints the count on screen so the eye can check itself. It also gained a
+  `mode`: `brand` spins ONE firebrand (the alātacakka read literally, for
+  paññatti in 2.1), `points` spins a fixed ring of momentary dhammas (santati
+  in 3.4). Neither ever changes its count.
+- **A chip inside brackets could strand its opening bracket** at the end of a
+  line — `නම (` / `ප්‍රඥප්තිය)` across a line break. `rich()` now pulls brackets
+  and quotes that touch a chip into a nowrap wrapper with it, so punctuation
+  travels with the word it belongs to. Fixes seven places in the content.
+- **Accented labels were invisible in the light theme.** `structure` node
+  labels and unlocked `paramatthaTable` cells were painted with a ramp step
+  (`text-cobalt-200`) rather than the theme-flipping `text-cobalt-ink` — pale
+  blue on a near-white tile. Both now take the `-ink` tokens, as the design
+  system has always required of an accent used as text.
+
+### Removed
+
+- **The `deconstruct` widget from පාඩම 2.1.** The lesson now reaches the same
+  conclusion in prose. The block type, its validator rule and its `/lab` entry
+  stay; no lesson currently uses it.
+- The cart figure from පාඩම 2.1.
+
 ### Added
+
+- **`plates` block** — an ordered deck of finished illustrations, stepped one
+  at a time. For artwork that arrives whole (its own title, its own labels, its
+  own place in a sequence) where the frame's only jobs are keeping the order
+  and keeping one plate on screen. Portrait plates are the case it was built
+  for: seven 4:5 illustrations rendered as separate figures is a section nobody
+  scrolls to the end of, and a grid throws away the order that is the point.
+  Framed as paper in both themes, since light-ground artwork would otherwise
+  punch a glowing hole in the dark one. In `/lab`.
+- **`/paramattha` — the 82 has its own door.** The map of the whole course used
+  to exist only inside පාඩම 2.1, so a learner wondering where ඕජා gets taught
+  had to remember which lesson carried the table. The 82 are now content in
+  their own right (`src/content/paramattha.ts`), indexed at `/paramattha` and
+  linked from the rail. **An opened cell now links out** — to the lesson that
+  teaches it, and to its glossary entry. 2.1 renders the same registry, so
+  this is the map given a second door rather than a second map: add a
+  paramattha once and both gain it.
+- **Glossary: සංඛත, අසංඛත, සක්කාය දිට්ඨිය** — all three are load-bearing in the
+  rebuilt 2.1 and none had an entry.
+- **The 82 as a painted plate** in පාඩම 2.1, replacing the partition diagram
+  that said the same thing less well. Both locales, 1678 × 937.
+- **The firebrand is now interactive in 2.1.** The alātacakka simile had been a
+  callout; the reader now turns the speed up and watches one brand become a
+  ring that is not there.
+
+- **Real artwork, ten pieces.** All four chapter covers (replacing the drawn SVG
+  placeholders) and six lesson figures: රතනඝරය with the six-coloured rays in
+  1.3, the cart resolving into particles in 2.1, the octad bound in one dewdrop
+  in 2.3, the blade passing between two orbs in 2.4, the sixteen-fold speed of
+  mind against one slow material flash in 3.2, and Rohitassa's endless stride in
+  4.2. `docs/IMAGE-PROMPTS.md` holds the prompts that produced them.
 
 - **පාඩම 1.2 rebuilt from the teacher's master note.** It opens on කාල
   ප්‍රසාරණය (time dilation) and the three questions the lesson answers, draws
@@ -234,6 +340,14 @@ bump means fixes and content corrections.
   **state** instead, which is.
 
 ### Fixed
+
+- **The chapter hero stopped cropping its artwork.** A hero band is about 2.7:1
+  and the artwork is 16:9, so as a full-bleed background `object-cover` threw
+  away a third of every picture — the top and the bottom, which is where a
+  composed image puts its sky and its ground. The picture now has its own 16:9
+  panel beside the text (above it on a narrow screen), so the whole frame is
+  seen and the text sits on plain dark ground instead of needing a scrim heavy
+  enough to bury the art anyway.
 
 - **The three දේශනා ක්‍රම were the wrong way round in පාඩම 1.3.** The Buddha
   gave සාරිපුත්ත the teaching **සංඛිත්ත** (by outline), and සාරිපුත්ත taught

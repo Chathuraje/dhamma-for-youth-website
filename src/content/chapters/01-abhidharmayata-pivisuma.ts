@@ -19,7 +19,7 @@ export const chapter: Chapter = {
   summary:
     "ත්‍රිපිටකය සහ අභිධර්මයේ ස්ථානය, පළමු දිව්‍ය ලෝක දෙක සහ කාල අනුපාතය, සහ මාස තුනක දේශනාවක් පොතක් බවට පත් වූ ගමන.",
   status: "published",
-  image: "chapters/01-abhidharmayata-pivisuma.svg",
+  image: "chapters/01-abhidharmayata-pivisuma.png",
 
   lessons: ["pitaka-thuna", "devlova-kalaya", "abhidharma-gamana"],
 

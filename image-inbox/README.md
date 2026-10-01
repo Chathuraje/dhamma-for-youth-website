@@ -31,4 +31,5 @@ If you do not say where it goes, Claude will ask rather than guess.
 - **Nothing hotlinked.** Every image is a local file. The footer promises there
   are no third-party requests.
 
-See `public/images/README.md` for the naming convention and the tree.
+See `public/images/README.md` for the naming convention and the tree, and
+`docs/IMAGE-PROMPTS.md` for ready-to-paste prompts at the right sizes.

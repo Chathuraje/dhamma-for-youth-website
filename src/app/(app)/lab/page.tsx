@@ -329,6 +329,29 @@ const DEMOS: Array<{ type: string; note: string; blocks: Block[] }> = [
     ],
   },
   {
+    type: "plates",
+    note: "A deck of finished plates, stepped one at a time. For illustrations that arrive whole — own title, own labels, own place in a sequence — where the frame's only jobs are keeping the order and keeping one on screen. Portrait plates are the case it was built for: seven 4:5 illustrations as separate figures is a section nobody scrolls to the end of. Framed as paper in both themes, since light-ground artwork would punch a hole in the dark one.",
+    blocks: [
+      {
+        type: "plates",
+        title: "ලී මේසය බිඳ බැලීම",
+        width: 1122,
+        height: 1402,
+        plates: [
+          {
+            src: "lessons/sammuti-paramattha/table/01.png",
+            alt: "ලී මේසයක් ඔහුගේ කොටස් දක්වේ සටහනක්.",
+            caption: "The plate carries its own title; the caption is for what it cannot say.",
+          },
+          {
+            src: "lessons/sammuti-paramattha/table/02.png",
+            alt: "මේස මතුපිට කොටස් දක්වේ සටහනක්.",
+          },
+        ],
+      },
+    ],
+  },
+  {
     type: "structure",
     note: "How a whole divides. Static partition diagram — nothing opens. Use `taxonomy` instead when counts have to add up.",
     blocks: [
@@ -645,14 +668,25 @@ const DEMOS: Array<{ type: string; note: string; blocks: Block[] }> = [
   },
   {
     type: "spinWheel",
-    note: "The firebrand. Move the speed and separate points become one ring — santati-ghana demonstrated rather than asserted. Falls back to a static illustration under reduced motion.",
+    note: "The firebrand, in its two readings. `mode: \"brand\"` (the default) spins ONE brand for paññatti; `mode: \"points\"` spins a fixed ring of momentary points for santati-ghana. Neither ever changes its count with the speed — only the smear grows — and both print the count on screen, because a widget that multiplied its objects would teach that speed creates things. Falls back to a static illustration under reduced motion.",
     blocks: [
       {
         type: "spinWheel",
+        title: "mode: \"brand\" — one firebrand",
+        slowLabel: "ගිනි පෙණෙල්ලක් පමණි",
+        slowText: "සෙමින් යන විට එක් ගිනි පෙණෙල්ලක් පෙනේ.",
+        fastLabel: "නොකැඩුණු වළල්ල",
+        fastText: "වේගයෙන් යන විට එකම වළල්ලක් පෙනේ. ගණන තවමත් එකයි.",
+        conclusion: "වෙනස් වූයේ වේගය පමණි.",
+      },
+      {
+        type: "spinWheel",
+        mode: "points",
+        title: "mode: \"points\" — momentary dhammas",
         slowLabel: "වෙන් වෙන් ලප",
         slowText: "සෙමින් යන විට වෙන් වෙන් ලප පෙනේ.",
         fastLabel: "නොකැඩුණු වළල්ල",
-        fastText: "වේගයෙන් යන විට එකම වළල්ලක් පෙනේ.",
+        fastText: "වේගයෙන් යන විට එකම වළල්ලක් පෙනේ. ලප ගණන වෙනස් වූයේ නැත.",
         conclusion: "වෙනස් වූයේ වේගය පමණි.",
       },
     ],

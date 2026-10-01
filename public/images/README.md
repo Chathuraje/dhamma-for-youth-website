@@ -38,6 +38,10 @@ moment an English build exists. **Call sites never change** — this mirrors how
 `src/lib/strings.ts` is meant to split into `strings.si.ts` / `strings.en.ts`.
 A chapter's `image` field works the same way.
 
+Ready-to-paste generation prompts for every picture the course needs, with the
+sizes and the crop-safe composition rule, are in
+[`docs/IMAGE-PROMPTS.md`](../../docs/IMAGE-PROMPTS.md).
+
 ## Rules
 
 - **Same base name for both languages.** `x-si.png` without `x-en.png` is what

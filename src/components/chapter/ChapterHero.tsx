@@ -9,12 +9,21 @@ import { formatNumber } from "@/lib/utils";
  * The head of a chapter page: which chapter this is, what it covers, and how
  * much of it there is.
  *
- * The chapter's own artwork is the ground — the same picture the dashboard
- * cards carry, so a chapter looks like itself wherever it is met. It sits
- * under a scrim weighted to the left, which is where the text is: a hero that
- * cannot be read is a decoration with a heading on it. A chapter with no
- * artwork keeps the drawn horizon, a per-chapter hue that costs no request and
- * shifts no layout. A server component throughout.
+ * The chapter's own artwork fills the **whole band**, as it does on the lesson
+ * hero — one chapter, one picture, treated the same way wherever it appears.
+ * The band is about 2.7 wide to 1 tall and the artwork is 16:9, so
+ * `object-cover` keeps the centre and trims sky and ground: chapter covers are
+ * therefore composed centre-heavy on purpose (see `docs/IMAGE-PROMPTS.md`,
+ * which specifies exactly this crop).
+ *
+ * Legibility comes from the same two-layer scrim `LessonBanner` uses — heavy on
+ * the left where the text sits, thin on the right where the picture is allowed
+ * to be a picture. Text is capped at `max-w-xl` so it never runs into the open
+ * side.
+ *
+ * A chapter with no artwork keeps the drawn horizon behind the whole header, a
+ * per-chapter hue that costs no request and shifts no layout. A server
+ * component throughout.
  *
  * There is no decorative pull-quote here. Lifting a lesson's cited quotation
  * into a banner meant a reader met the same passage twice — once as chrome at
@@ -42,14 +51,10 @@ export function ChapterHero({
 }) {
   return (
     <header className="relative overflow-hidden rounded-3xl bg-cobalt-800 shadow-card ring-1 ring-cobalt-900/40">
+      {/* No picture? The drawn horizon fills the whole header instead. */}
       {image ? (
         <div aria-hidden className="pointer-events-none absolute inset-0">
-          <ChapterArt
-            src={image}
-            number={number}
-            eager
-            className="h-full w-full"
-          />
+          <ChapterArt src={image} number={number} eager className="h-full w-full" />
           <span className="absolute inset-0 bg-gradient-to-r from-cobalt-900/95 via-cobalt-900/80 to-cobalt-900/35" />
           <span className="absolute inset-0 bg-gradient-to-t from-cobalt-900/70 to-transparent" />
         </div>
@@ -57,8 +62,8 @@ export function ChapterHero({
         <Horizon number={number} />
       )}
 
-      <div className="relative p-7 sm:p-9">
-        <div className="max-w-3xl">
+      <div className="relative p-5 sm:p-7 lg:p-9">
+        <div className="min-w-0">
           <p className="font-mono text-xs font-medium uppercase tracking-[0.16em] text-cobalt-300">
             {t.course.chapter} {String(number).padStart(2, "0")}
           </p>
@@ -67,7 +72,7 @@ export function ChapterHero({
             {String(number).padStart(2, "0")}
           </span>
 
-          <h1 className="si-tight -mt-6 font-display text-[clamp(1.6rem,3.2vw,2.4rem)] font-semibold text-rail-ink">
+          <h1 className="si-tight -mt-6 max-w-xl font-display text-[clamp(1.6rem,3.2vw,2.4rem)] font-semibold text-rail-ink">
             {title}
           </h1>
           <p className="si-heading mt-2 max-w-xl text-[0.95rem] text-cobalt-300">

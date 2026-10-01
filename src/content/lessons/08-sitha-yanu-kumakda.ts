@@ -24,7 +24,7 @@ export const lesson: Lesson = {
   difficulty: "foundation",
   durationMin: 18,
   tags: ["චිත්ත", "මූලික"],
-  prerequisites: ["paramarthaya-handunaganima"],
+  prerequisites: ["sammuti-paramattha"],
 
   objectives: [
     "සිතේ අර්ථය සහ පර්යාය නාම කීමට",

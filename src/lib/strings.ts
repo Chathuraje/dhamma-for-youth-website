@@ -219,8 +219,18 @@ export const t = {
     speed: "වේගය",
     slow: "සෙමින්",
     fast: "වේගයෙන්",
+    /** Stays at one at every speed — that is the whole teaching. */
+    brandCount: "ගිනි පෙණෙලි ගණන",
+    pointCount: "ලප ගණන",
     reducedMotionNote:
       "ඔබේ උපකරණයේ චලන අඩු කිරීම සක්‍රීයයි, එනිසා රෝදය කැරකෙන්නේ නැත. ස්ලයිඩරය චලනය කර තත්ත්ව දෙකේ විස්තර කියවන්න.",
+  },
+
+  plates: {
+    heading: "පින්තූර මාලාව",
+    plate: "පින්තූරය",
+    previous: "පෙර පින්තූරය",
+    next: "මීළඟ පින්තූරය",
   },
 
   hierarchy: {
@@ -244,6 +254,10 @@ export const t = {
     unlocked: "විවෘත වූ",
     locked: "තවම විවෘත නොවූ",
     unlockedIn: "විවෘත වන පාඩම",
+    taughtIn: "උගන්වන පාඩම",
+    fullEntry: "සම්පූර්ණ විවරණය",
+    indexBlurb:
+      "මුළු විශ්වයම විග්‍රහ කෙරෙන මූලික අංග 82. එක් එක් අංගය තට්ටු කර, එය උගන්වන පාඩමට හෝ එහි සම්පූර්ණ විවරණයට යන්න.",
     progressNote: "පාඩම් සම්පූර්ණ කරන විට තව තවත් පරමාර්ථ විවෘත වේ.",
   },
 
